@@ -1,5 +1,13 @@
-## Resources
+## References
 
-- https://vitest.dev
+### MUI
+
+- https://mui.com/material-ui/
+
+### Vite
+
 - https://vitejs.dev
-- https://github.com/vitest-dev/vitest/tree/main/examples/react-testing-lib
+
+### OpenAI
+
+- https://platform.openai.com/docs/api-reference
