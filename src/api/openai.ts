@@ -1,7 +1,3 @@
-/**
- * @link https://platform.openai.com/docs/api-reference
- */
-
 import { Configuration, OpenAIApi } from "openai";
 
 const { VITE_OPENAI_API_KEY } = import.meta.env;
