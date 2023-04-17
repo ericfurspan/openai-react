@@ -1,5 +1,5 @@
 import reactLogo from "./assets/react.svg";
-import { askGpt } from "./api";
+import { askGpt } from "./open-ai";
 import "./App.css";
 
 function App() {
