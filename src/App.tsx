@@ -1,61 +1,39 @@
 import { ChangeEvent, useState } from "react";
-import {
-  Fab,
-  Grid,
-  Box,
-  Container,
-  Stack,
-  Typography,
-  Paper,
-  AppBar,
-  Toolbar,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Container, Stack, Typography, AppBar, Toolbar, TextField, Button } from "@mui/material";
 import ChatFeed from "./components/ChatFeed";
 import { askGpt } from "./api/openai";
+import promptSamples from "./assets/prompts.json";
 
 const App = () => {
-  const [chatOpen, setChatOpen] = useState(false);
-  const [chatHistory, setChatHistory] = useState<string[]>([""]);
+  const [chatHistory, setChatHistory] = useState<string[] | null>(null);
   const [message, setMessage] = useState("");
-
-  const handleStartChat = () => {
-    setChatOpen(true);
-  };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
     if (message) {
-      const response = await askGpt(message);
+      const response = await askGpt(message, chatHistory);
 
       if (response) {
-        if (!chatHistory) setChatHistory(() => [message, response]);
-        else setChatHistory((prev) => [...prev, message, response]);
+        const newHistory = chatHistory ? [...chatHistory, message, response] : [message, response];
 
+        setChatHistory(newHistory);
         setMessage("");
       }
     }
   };
 
-  console.log("chatHistory", chatHistory);
-
   return (
-    <Container maxWidth="xl" sx={{ p: 4 }}>
+    <Container maxWidth="md" sx={{ p: 4 }}>
       <AppBar position="static" color="default">
         <Toolbar>
           <Typography variant="h6" component="h1" sx={{ flexGrow: 1 }}>
             ChatGPT Client
           </Typography>
-
-          <Button variant="contained" onClick={handleStartChat}>
-            Start Chat
-          </Button>
         </Toolbar>
       </AppBar>
 
-      {chatHistory.length > 1 && <ChatFeed feedItems={chatHistory} />}
+      {chatHistory && <ChatFeed feedItems={chatHistory} />}
 
       <Stack
         alignItems="flex-end"
@@ -66,10 +44,12 @@ const App = () => {
         onSubmit={handleSubmit}
       >
         <TextField
-          id="user-message"
-          label="Send a message"
+          id="message"
+          label="Message to ChatGPT"
           variant="outlined"
-          sx={{ minWidth: 300 }}
+          minRows={2}
+          multiline
+          sx={{ width: 325 }}
           value={message}
           onChange={(event: ChangeEvent<HTMLInputElement>) => setMessage(event.target.value)}
         />
