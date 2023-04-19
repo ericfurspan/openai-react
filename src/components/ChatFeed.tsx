@@ -10,22 +10,31 @@ import {
   Typography,
   Box,
   Paper,
+  IconButton,
+  Stack,
 } from "@mui/material";
-import { Psychology as PsychologyIcon } from "@mui/icons-material";
+import { Assistant as AssistantIcon, Psychology as PsychologyIcon } from "@mui/icons-material";
+import CopyToClipboard from "./CopyToClipboard";
 
-const ChatFeed = ({ feedItems }: { feedItems: ChatCompletionRequestMessage[] }) => {
+const ChatFeed = ({ messages }: { messages: ChatCompletionRequestMessage[] }) => {
   return (
     <List>
-      {feedItems?.map((item) => (
-        <Fragment key={item.content}>
-          <ListItem>
+      {messages?.map((message) => (
+        <Fragment key={message.content}>
+          <Stack direction="row" alignItems="flex-start" component={ListItem}>
             <ListItemAvatar>
-              <Avatar sx={{ bgcolor: "primary.light" }}>
-                <PsychologyIcon />
-              </Avatar>
+              {message.role === "user" && <Avatar />}
+              {message.role === "assistant" && (
+                <Avatar sx={{ bgcolor: "info.main" }}>
+                  <AssistantIcon />
+                </Avatar>
+              )}
             </ListItemAvatar>
-            <ListItemText primary={item.content} />
-          </ListItem>
+
+            <ListItemText primary={message.content} />
+
+            <CopyToClipboard message={message.content} />
+          </Stack>
           <Divider variant="inset" component="li" />
         </Fragment>
       ))}

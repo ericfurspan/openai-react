@@ -1,31 +1,49 @@
 import { ChangeEvent, useState } from "react";
 import { ChatCompletionRequestMessage } from "openai";
-import { Container, Stack, Typography, AppBar, Toolbar, TextField, Button } from "@mui/material";
+import {
+  Container,
+  Stack,
+  Typography,
+  AppBar,
+  Toolbar,
+  TextField,
+  Button,
+  Box,
+  Skeleton,
+} from "@mui/material";
 import ChatFeed from "./components/ChatFeed";
 import { askGpt } from "./api/openai";
 
 const App = () => {
   const [chatHistory, setChatHistory] = useState<ChatCompletionRequestMessage[] | null>(null);
   const [userMessage, setUserMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
-    let messages: ChatCompletionRequestMessage[] = [];
+    try {
+      setLoading(true);
 
-    if (!chatHistory) {
-      messages = [{ role: "user", content: userMessage }];
-    } else {
-      messages = [...chatHistory, { role: "user", content: userMessage }];
-    }
+      let messages: ChatCompletionRequestMessage[] = [];
 
-    const response = await askGpt(userMessage, messages);
+      if (!chatHistory) {
+        messages = [{ role: "user", content: userMessage }];
+      } else {
+        messages = [...chatHistory, { role: "user", content: userMessage }];
+      }
 
-    if (response) {
-      const { role, content } = response;
+      const response = await askGpt(userMessage, messages);
 
-      setChatHistory([...messages, { role, content }]);
-      setUserMessage("");
+      if (response) {
+        const { role, content } = response;
+
+        setChatHistory([...messages, { role, content }]);
+        setUserMessage("");
+        setLoading(false);
+      }
+    } catch (e) {
+      setLoading(false);
     }
   };
 
@@ -39,10 +57,18 @@ const App = () => {
         </Toolbar>
       </AppBar>
 
-      {chatHistory && <ChatFeed feedItems={chatHistory} />}
+      {loading ? (
+        <Box>
+          <Skeleton height={56} width="100%" />
+          <Skeleton height={72} width="100%" />
+          <Skeleton height={56} width="100%" />
+        </Box>
+      ) : (
+        chatHistory && <ChatFeed messages={chatHistory} />
+      )}
 
       <Stack
-        alignItems="flex-end"
+        alignItems="flex-start"
         paddingTop={2}
         component="form"
         noValidate
@@ -53,9 +79,8 @@ const App = () => {
           id="userMessage"
           label="Message to ChatGPT"
           variant="outlined"
-          minRows={2}
+          fullWidth
           multiline
-          sx={{ width: 325 }}
           value={userMessage}
           onChange={(event: ChangeEvent<HTMLInputElement>) => setUserMessage(event.target.value)}
         />
