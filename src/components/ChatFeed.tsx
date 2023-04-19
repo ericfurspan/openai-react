@@ -1,4 +1,4 @@
-// import { useState, useRef, useEffect } from "react";
+import { ChatCompletionRequestMessage } from "openai";
 import { Fragment } from "react";
 import {
   List,
@@ -13,18 +13,18 @@ import {
 } from "@mui/material";
 import { Psychology as PsychologyIcon } from "@mui/icons-material";
 
-const ChatFeed = ({ feedItems }: { feedItems: string[] }) => {
+const ChatFeed = ({ feedItems }: { feedItems: ChatCompletionRequestMessage[] }) => {
   return (
     <List>
       {feedItems?.map((item) => (
-        <Fragment key={item}>
+        <Fragment key={item.content}>
           <ListItem>
             <ListItemAvatar>
               <Avatar sx={{ bgcolor: "primary.light" }}>
                 <PsychologyIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={item} />
+            <ListItemText primary={item.content} />
           </ListItem>
           <Divider variant="inset" component="li" />
         </Fragment>
