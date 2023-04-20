@@ -33,7 +33,7 @@ const ChatFeed = ({ messages }: { messages: ChatCompletionRequestMessage[] }) =>
 
             <ListItemText primary={message.content} />
 
-            <CopyToClipboard message={message.content} />
+            <CopyToClipboard content={message.content} />
           </Stack>
           <Divider variant="inset" component="li" />
         </Fragment>
