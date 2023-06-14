@@ -13,9 +13,3 @@
 
 - https://platform.openai.com/docs/api-reference/chat/create
 - https://github.com/f/awesome-chatgpt-prompts#prompts
-
-## todo
-
-- clear chat btn
-- bgcolor or border on chat feed
-- add copy to clipboard next to gpt response
